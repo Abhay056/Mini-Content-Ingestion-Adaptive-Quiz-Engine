@@ -199,6 +199,20 @@ curl "http://localhost:8000/api/quiz/by-topic/Shapes?difficulty=medium&limit=3"
     "note": "Useful for focused learning on specific topics"
 }
 
+# Example 10: Get Quiz API Endpoints
+
+# Get quiz by topic
+curl "http://localhost:8000/api/quiz/by-topic/Grammar?limit=2"
+
+# Get quiz by subject
+curl "http://localhost:8000/api/quiz/by-subject/English?limit=2"
+
+# Get any quizzes
+curl "http://localhost:8000/api/quiz?limit=2"
+
+# Check student progress
+curl "http://localhost:8000/api/student-progress/alice"
+
 
 # Python Integration Example
 PYTHON_INTEGRATION_EXAMPLE = """
