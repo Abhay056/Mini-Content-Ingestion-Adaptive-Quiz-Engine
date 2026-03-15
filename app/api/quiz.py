@@ -64,8 +64,7 @@ async def get_quiz(
                 options=options,
                 difficulty=q.difficulty,
                 subject=q.subject,
-                topic=q.topic,
-                explanation=q.explanation
+                topic=q.topic
             ))
         
         return response
@@ -201,12 +200,39 @@ async def get_quiz_by_subject(
     - **limit**: Number of questions to return
     """
     
-    return await get_quiz(
-        subject=subject,
-        difficulty=difficulty,
-        limit=limit,
-        db=db
-    )
+    try:
+        questions = AdaptiveDifficultyService.select_quiz_questions(
+            db=db,
+            limit=limit,
+            subject=subject,
+            difficulty=difficulty,
+            student_id=None
+        )
+        
+        if not questions:
+            raise HTTPException(status_code=404, detail="No questions found matching criteria")
+        
+        # Convert questions to response schema
+        response = []
+        for q in questions:
+            options = json.loads(q.options) if q.options else []
+            response.append(QuizQuestionSchema(
+                question_id=q.question_id,
+                question_text=q.question_text,
+                question_type=q.question_type,
+                options=options,
+                difficulty=q.difficulty,
+                subject=q.subject,
+                topic=q.topic
+            ))
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching quiz questions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/quiz/by-topic/{topic}")
@@ -224,9 +250,36 @@ async def get_quiz_by_topic(
     - **limit**: Number of questions to return
     """
     
-    return await get_quiz(
-        topic=topic,
-        difficulty=difficulty,
-        limit=limit,
-        db=db
-    )
+    try:
+        questions = AdaptiveDifficultyService.select_quiz_questions(
+            db=db,
+            limit=limit,
+            topic=topic,
+            difficulty=difficulty,
+            student_id=None
+        )
+        
+        if not questions:
+            raise HTTPException(status_code=404, detail="No questions found matching criteria")
+        
+        # Convert questions to response schema
+        response = []
+        for q in questions:
+            options = json.loads(q.options) if q.options else []
+            response.append(QuizQuestionSchema(
+                question_id=q.question_id,
+                question_text=q.question_text,
+                question_type=q.question_type,
+                options=options,
+                difficulty=q.difficulty,
+                subject=q.subject,
+                topic=q.topic
+            ))
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching quiz questions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

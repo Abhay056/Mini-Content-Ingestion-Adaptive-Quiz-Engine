@@ -33,7 +33,21 @@ class SourceSchema(BaseModel):
 
 # Quiz Schemas
 class QuizQuestionSchema(BaseModel):
-    """Schema for quiz question response"""
+    """Schema for quiz question response (without answer/explanation)"""
+    question_id: str = Field(..., description="Unique question identifier")
+    question_text: str = Field(..., description="The question text")
+    question_type: str = Field(..., description="Type: MCQ, true_false, fill_blank")
+    options: List[str] = Field(..., description="List of answer options")
+    difficulty: str = Field(..., description="Difficulty level: easy, medium, hard")
+    subject: str = Field(..., description="Subject of the question")
+    topic: str = Field(..., description="Topic of the question")
+    
+    class Config:
+        from_attributes = True
+
+
+class QuizQuestionWithExplanationSchema(BaseModel):
+    """Schema for quiz question with explanation (for answer reveal)"""
     question_id: str = Field(..., description="Unique question identifier")
     question_text: str = Field(..., description="The question text")
     question_type: str = Field(..., description="Type: MCQ, true_false, fill_blank")

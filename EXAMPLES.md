@@ -211,7 +211,7 @@ curl "http://localhost:8000/api/quiz/by-subject/English?limit=2"
 curl "http://localhost:8000/api/quiz?limit=2"
 
 # Check student progress
-curl "http://localhost:8000/api/student-progress/alice"
+curl "http://localhost:8000/api/student-progress/abhay"
 
 
 # Python Integration Example

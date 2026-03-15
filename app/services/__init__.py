@@ -145,12 +145,14 @@ class PDFExtractionService:
     
     @staticmethod
     def generate_source_id(filename: str) -> str:
-        """Generate a unique source ID"""
-        # Use simplified version of filename as base
-        base = filename.replace('.pdf', '').replace('_', '')[:20]
+        """Generate a unique source ID with timestamp to allow re-ingestion"""
         import hashlib
-        hash_suffix = hashlib.md5(filename.encode()).hexdigest()[:8].upper()
-        return f"SRC_{hash_suffix}"
+        import time
+        # Use filename hash + timestamp to ensure uniqueness
+        base = filename.replace('.pdf', '').replace('_', '')[:15]
+        timestamp = str(int(time.time() * 1000))[-6:]  # Last 6 digits of timestamp
+        hash_suffix = hashlib.md5((filename + timestamp).encode()).hexdigest()[:6].upper()
+        return f"SRC_{hash_suffix}_{timestamp}"
     
     @staticmethod
     def generate_chunk_id(source_id: str, chunk_index: int) -> str:
